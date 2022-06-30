@@ -4,7 +4,7 @@
 
 namespace AutomationFramework.API
 {
-    using Microsoft.IdentityModel.Clients.ActiveDirectory;
+    using Microsoft.Identity.Client;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -57,13 +57,23 @@ namespace AutomationFramework.API
         {
             // Add your tenant to the authentication context. 
             string authority = string.Format(CultureInfo.InvariantCulture, aadInstance + aadTenant);
-            var authContext = new AuthenticationContext(authority);
 
-            // Add your application Id and App Key credentials.
-            var clientCredentials = new ClientCredential(clientId, clientSecret);
+            var authContext = ConfidentialClientApplicationBuilder.Create(clientId)
+                    .WithClientSecret(clientSecret)
+                    .WithAuthority(authority)
+                    .Build();
 
             // Acquire token.
-            AuthenticationResult result = authContext.AcquireTokenAsync(audience, clientCredentials).Result;
+            var result = authContext.AcquireTokenForClient(
+                        new[] { $"{audience}/.default" })
+                        .ExecuteAsync()
+                        .ConfigureAwait(false).GetAwaiter().GetResult();
+
+            // ADAL Version.
+            //var authContext = new AuthenticationContext(authority);
+            // Add your application Id and App Key credentials.
+            //var clientCredentials = new ClientCredential(clientId, clientSecret);
+            //AuthenticationResult result = authContext.AcquireTokenAsync(audience, clientCredentials).Result;
 
             if (result == null)
             {
@@ -76,43 +86,43 @@ namespace AutomationFramework.API
 
         public static HttpResponseMessage PutRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers)
         {
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Authenticating...");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             
             var result = client.PutAsync(requestUrl, httpContent).Result;
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Receiving response..");
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
 
             return result;
         }
 
         public static HttpResponseMessage PutRequestWithCertificate(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, X509Certificate2 certificate)
         {
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Authenticating...");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, certificate);
 
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
             var result = client.PutAsync(requestUrl, httpContent).Result;
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Receiving response..");
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
 
             return result;
         }
 
         public static HttpResponseMessage GetRequest(string requestUrl, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
         {
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Authenticating...");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
-            Logger.LOGMessage(Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
 
             var builder = new UriBuilder(requestUrl);
 
