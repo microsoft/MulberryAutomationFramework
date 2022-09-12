@@ -90,11 +90,36 @@ namespace AutomationFramework.API
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
-            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <PUT>...");
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             
             var result = client.PutAsync(requestUrl, httpContent).Result;
-            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response...");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
+
+            return result;
+        }
+
+        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
+        {
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
+            Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
+
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <POST>...");
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            var builder = new UriBuilder(requestUrl);
+
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            foreach (KeyValuePair<string, string> keyValuePair in queryParams)
+            {
+                query[keyValuePair.Key] = keyValuePair.Value;
+            }
+            builder.Query = query.ToString();
+
+            var result = client.PostAsync(builder.ToString(), httpContent).Result;
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response...");
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
 
             return result;
@@ -106,7 +131,7 @@ namespace AutomationFramework.API
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, certificate);
 
-            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <PUT>...");
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
             var result = client.PutAsync(requestUrl, httpContent).Result;
@@ -122,7 +147,7 @@ namespace AutomationFramework.API
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
-            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request..");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <GET>...");
 
             var builder = new UriBuilder(requestUrl);
 
@@ -134,6 +159,30 @@ namespace AutomationFramework.API
             builder.Query = query.ToString();
 
             return client.GetAsync(builder.ToString()).Result;
+        }
+
+        public static HttpResponseMessage DeleteRequest(string requestUrl, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
+        {
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
+            Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
+
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <POST>...");
+
+            var builder = new UriBuilder(requestUrl);
+
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            foreach (KeyValuePair<string, string> keyValuePair in queryParams)
+            {
+                query[keyValuePair.Key] = keyValuePair.Value;
+            }
+            builder.Query = query.ToString();
+
+            var result = client.DeleteAsync(builder.ToString()).Result;
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Receiving response...");
+            AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t \t " + (result.Content.ReadAsStringAsync().Result.Length <= 1000 ? result.Content.ReadAsStringAsync().Result : result.Content.ReadAsStringAsync().Result.Substring(0, 1000)));
+
+            return result;
         }
     }
 }
