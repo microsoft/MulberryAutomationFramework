@@ -620,7 +620,7 @@ namespace AutomationFramework
                 if (methodInfo.GetParameters().Length != objValue.Length)
                 {
                     var defaultParams = methodInfo.GetParameters().Skip(objValue.Length)
-                        .Select(a => a.HasDefaultValue ? a.DefaultValue : null);
+                        .Select(i => i.HasDefaultValue ? i.DefaultValue : null);
                     objValue = objValue.Concat(defaultParams).ToArray();
                 }
 
