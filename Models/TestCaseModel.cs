@@ -6,6 +6,7 @@ namespace AutomationFramework
 {
     using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Security.Cryptography.X509Certificates;
 
     /// <summary>
@@ -48,5 +49,11 @@ namespace AutomationFramework
         /// </summary>
         [JsonProperty("certificate", Order = 1)]
         public X509Certificate2 Certificate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the api contentType.
+        /// </summary>
+        [JsonProperty("contentType", Order = 1)]
+        public string ContentType { get; set; }
     }
 }

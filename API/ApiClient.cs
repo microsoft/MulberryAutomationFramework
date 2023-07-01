@@ -100,14 +100,17 @@ namespace AutomationFramework.API
             return result;
         }
 
-        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
+        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams, string contentType)
         {
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <POST>...");
-            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            string mediaType = string.IsNullOrEmpty(contentType) ? Constants.CONTENT_TYPE : contentType;
+
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, mediaType);
 
             var builder = new UriBuilder(requestUrl);
 
@@ -132,6 +135,7 @@ namespace AutomationFramework.API
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, certificate);
 
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <PUT>...");
+            
             var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
             var result = client.PutAsync(requestUrl, httpContent).Result;

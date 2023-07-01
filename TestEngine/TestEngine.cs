@@ -617,6 +617,13 @@ namespace AutomationFramework
 
                 MethodInfo methodInfo = type.GetMethod(functionName);
 
+                if (methodInfo.GetParameters().Length != objValue.Length)
+                {
+                    var defaultParams = methodInfo.GetParameters().Skip(objValue.Length)
+                        .Select(a => a.HasDefaultValue ? a.DefaultValue : null);
+                    objValue = objValue.Concat(defaultParams).ToArray();
+                }
+
                 if (methodInfo.GetParameters().Count() != objValue.Count())
                 {
                     string strParameters = "";
