@@ -100,7 +100,7 @@ namespace AutomationFramework.API
             return result;
         }
 
-        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams, string contentType)
+        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams, string contentType = Constants.CONTENT_TYPE)
         {
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
@@ -108,9 +108,7 @@ namespace AutomationFramework.API
 
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <POST>...");
 
-            string mediaType = string.IsNullOrEmpty(contentType) ? Constants.CONTENT_TYPE : contentType;
-
-            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, mediaType);
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, contentType);
 
             var builder = new UriBuilder(requestUrl);
 

@@ -25,7 +25,7 @@ namespace AutomationFramework
         public static bool LOGGER_CAPTURE_SQL_QUERY = false;
         public static int DB_NETWORK_ERROR_RETRY = 3;
         public static string DATABASE = "SQL";
-        public static string CONTENT_TYPE = "application/json";
+        public const string CONTENT_TYPE = "application/json";
 
         public static string GetConfigValue(IConfiguration config, string configKey, Boolean bRaiseError = true)
         {
