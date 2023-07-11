@@ -616,6 +616,13 @@ namespace AutomationFramework
                 object instance = Activator.CreateInstance(type);
 
                 MethodInfo methodInfo = type.GetMethod(functionName);
+                
+                if (methodInfo.GetParameters().Length != objValue.Length)
+                {
+                    var defaultParams = methodInfo.GetParameters().Skip(objValue.Length)
+                        .Select(i => i.HasDefaultValue ? i.DefaultValue : null);
+                    objValue = objValue.Concat(defaultParams).ToArray();
+                }
 
                 if (methodInfo.GetParameters().Count() != objValue.Count())
                 {
