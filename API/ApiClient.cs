@@ -100,7 +100,7 @@ namespace AutomationFramework.API
             return result;
         }
 
-        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams)
+        public static HttpResponseMessage PostRequest(string requestUrl, string jsonPayload, string clientId, string clientSecret, string aadInstance, string aadTenant, string audience, Dictionary<string, string> headers, Dictionary<string, string> queryParams, string contentType = Constants.CONTENT_TYPE)
         {
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t URL found: " + requestUrl);
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Authenticating...");
