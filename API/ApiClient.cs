@@ -107,7 +107,7 @@ namespace AutomationFramework.API
             Authenticate(clientId, clientSecret, aadInstance, aadTenant, audience, headers, null);
 
             AutomationFramework.Logger.LOGMessage(AutomationFramework.Logger.MSG.MESSAGE, "\t Sending request <POST>...");
-            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+            var httpContent = new StringContent(jsonPayload, Encoding.UTF8, contentType);
 
             var builder = new UriBuilder(requestUrl);
 
