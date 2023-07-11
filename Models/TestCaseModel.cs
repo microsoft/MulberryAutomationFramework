@@ -48,5 +48,11 @@ namespace AutomationFramework
         /// </summary>
         [JsonProperty("certificate", Order = 1)]
         public X509Certificate2 Certificate { get; set; }
+
+         /// <summary>
+        /// Gets or sets the api contentType.
+        /// </summary>
+        [JsonProperty("contentType", Order = 1)]
+        public string ContentType { get; set; }
     }
 }
