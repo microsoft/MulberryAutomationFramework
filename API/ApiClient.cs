@@ -53,6 +53,47 @@ namespace AutomationFramework.API
 
         }
 
+        /// <summary>
+        /// Authenticate via Managed Identity.
+        /// TO BE DONE
+        /// Include Azure.Identity NuGet package to make the below code work.
+        /// </summary>
+        /// <param name="headers">Chat session identifier for the current conversation.</param>
+        /// <param name="userAssignedClientId">User Prompt message to send to the deployment.</param>
+        /// <returns>Create the client object based on managed identity.</returns>
+        /* public static void AuthenticateMSI(Dictionary<string, string> headers, string userAssignedClientId = null)
+        {
+            DefaultAzureCredential managedIdentityCredential;
+            client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json-patch+json"));
+
+            if (headers != null)
+            {
+                foreach (KeyValuePair<string, string> keyValuePair in headers)
+                {
+                    client.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+            }
+
+            if (userAssignedClientId != null)
+            {
+                managedIdentityCredential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = userAssignedClientId });
+            }
+            else
+            {
+                managedIdentityCredential = new DefaultAzureCredential();
+            }
+
+            // Create an instance of HttpClient with the managed identity
+            client.DefaultRequestHeaders.
+            client = new HttpClient(new ManagedIdentityHttpClientHandler(managedIdentityCredential));
+
+            //client.BaseAddress = new Uri(testCaseModel.BaseAddress);
+
+        }
+        */
+
         public static string GetToken(string clientId, string clientSecret, string aadInstance, string aadTenant, string audience)
         {
             // Add your tenant to the authentication context. 
